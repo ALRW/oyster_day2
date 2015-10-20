@@ -1,3 +1,4 @@
+require './lib/station'
 class Oystercard
 
   LIMIT = 90

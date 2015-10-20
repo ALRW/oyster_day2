@@ -42,7 +42,7 @@ describe Oystercard do
   end
 
   describe '#touch_out' do
-    let(:station1) {double(:station1)}
+    let(:station1) {double(:station1, :zone => 3)}
     it 'should not be in journey when touched out' do
       subject.top_up 10
       subject.touch_in(station)
@@ -53,11 +53,17 @@ describe Oystercard do
       expect{subject.touch_out(station1)}.to change{subject.balance}.by(-Oystercard::MINIMUM)
     end
 
-    it 'should  record station upon touching out' do
+    it 'should record station upon touching out' do
       subject.top_up 10
       subject.touch_in station
       subject.touch_out station1
       expect(subject.history). to include({station => station1})
+    end
+    it 'should record the zone of the exit station' do
+    subject.top_up 10
+    subject.touch_in station
+    subject.touch_out station1
+    expect(subject.history[0][station].zone). to eq(3)
     end
   end
 end
