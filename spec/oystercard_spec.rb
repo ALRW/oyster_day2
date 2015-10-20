@@ -6,6 +6,10 @@ describe Oystercard do
     # expect(subject.balance).to be(0)
   end
 
+  it ' has no journey history when created' do
+    expect(subject.history).to be_empty
+  end
+
   describe '#top_up' do
 
     it {is_expected.to respond_to(:top_up).with(1).argument}
@@ -38,14 +42,22 @@ describe Oystercard do
   end
 
   describe '#touch_out' do
+    let(:station1) {double(:station1)}
     it 'should not be in journey when touched out' do
       subject.top_up 10
       subject.touch_in(station)
-      subject.touch_out
+       subject.touch_out(station1)
       expect(subject).not_to be_in_journey
     end
     it 'should charge me when I touch out' do
-      expect{subject.touch_out}.to change{subject.balance}.by(-Oystercard::MINIMUM)
+      expect{subject.touch_out(station1)}.to change{subject.balance}.by(-Oystercard::MINIMUM)
+    end
+
+    it 'should  record station upon touching out' do
+      subject.top_up 10
+      subject.touch_in station
+      subject.touch_out station1
+      expect(subject.history). to include({station => station1})
     end
   end
 end
