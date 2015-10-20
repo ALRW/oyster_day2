@@ -5,7 +5,7 @@ describe Oystercard do
     # expect(subject.balance).to be(0)
   end
 
-  
+
   describe '#top_up' do
 
     it {is_expected.to respond_to(:top_up).with(1).argument}
@@ -17,11 +17,13 @@ describe Oystercard do
     it 'fails if more than £90 is added' do
       expect{subject.top_up(100)}.to raise_error("The topup limit is £#{Oystercard::LIMIT}")
     end
+  end
 
+  describe '#deduct' do
 
-
-    # it 'adds money' do
-    #   expect(subject.top_up(15)).to eq subject.balance
-    # end
+    it 'deducts money' do
+      subject.top_up 10
+      expect(subject.deduct 5).to eq 5
+    end
   end
 end
